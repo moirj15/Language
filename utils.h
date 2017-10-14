@@ -4,7 +4,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+#include <string>
 #include <vector>
+
+#define local static
+
+using namespace std;
 
 /**
  * Exits the program with EXIT_FAILURE and displays the given messaage.

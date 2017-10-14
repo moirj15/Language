@@ -1,6 +1,6 @@
 CC = g++
 FLAGS = -std=c++14 -Wall -Wextra -pedantic
-OBJ = main.o utils.o #lexer.o
+OBJ = main.o utils.o scanner.o errorLog.o
 
 FILES = $*.cpp $*.h
 
