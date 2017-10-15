@@ -37,7 +37,8 @@ enum TOKEN_TYPE {
 	DECREMENT,				// A--
 	NAME,					// name of something, can be type, function, etc.
 	WHITE_SPACE,
-
+	BOOL_AND,				// A && B
+	BOOL_OR,				// A || B
 	NUMBER_OF_TOKENS
 };
 
@@ -49,17 +50,48 @@ struct Token {
 	string 		data;	// The data
 
 	Token(uint32_t t, string d);
-	~Token();
+	~Token(void);
 };
 
 class Scanner {
+	FILE *m_sourceFile;			// The source file
+	ErrorLog &m_el;			// The ErrorLog that the scanner will report to
+	vector<Token> m_tokens;	// The list of tokens.
+	vector<char> m_source;
 
-	FILE *m_source;
-	ErrorLog &m_el
-	vector<Token> m_tokens;
+	void isInteger(void);
+	void isArithOp(void);
+	void isLogOp(void);
+	void isBoolOp(void);
 public:
-	Scanner(FILE *source, ErrorLog &el);
+	
+	/**
+	 * Constructor.
+	 *
+	 * @param source: The source file that will be read from.
+	 * @param el: The reference to the ErrorLog that will be used for error
+	 * reporting.
+	 */
+	Scanner(FILE *sf, ErrorLog &el);
+	
+	/**
+	 * Destructor
+	 */
 	~Scanner(void);
+
+	/**
+	 * Scans the source file and produces a list of tokens.
+	 */
+	vector<Token> scan(void);	
 };
 
 #endif
+
+
+
+
+
+
+
+
+

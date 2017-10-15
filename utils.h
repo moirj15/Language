@@ -5,11 +5,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <ctype.h>
 #include <string>
 #include <vector>
 
-#define local static
-
+#define local 	static
+#define db()	printf("hit\n");
 using namespace std;
 
 /**
