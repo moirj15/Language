@@ -39,6 +39,9 @@ enum TOKEN_TYPE {
 	WHITE_SPACE,
 	BOOL_AND,				// A && B
 	BOOL_OR,				// A || B
+	HASH,					// #
+	INTEGER,
+	FLOAT,
 	NUMBER_OF_TOKENS
 };
 
@@ -54,15 +57,42 @@ struct Token {
 };
 
 class Scanner {
-	FILE *m_sourceFile;			// The source file
-	ErrorLog &m_el;			// The ErrorLog that the scanner will report to
-	vector<Token> m_tokens;	// The list of tokens.
-	vector<char> m_source;
+	FILE 			*m_sourceFile;	// The source file
+	ErrorLog 		&m_el;			// The ErrorLog that the scanner will report to
+	vector<Token> 	m_tokens;		// The list of tokens.
+	vector<char> 	m_source;
+	int				m_pos;
 
-	void isInteger(void);
-	void isArithOp(void);
-	void isLogOp(void);
-	void isBoolOp(void);
+	/**
+	 * Attempts to create a integer token from the current positon in the source.
+	 */
+	bool isInteger(void);
+
+	/**
+	 * Attempts to create an arithmetic token from the current position.
+	 */
+	bool isArithOp(void);
+
+	/**
+	 * Attempts to create a logical token from the current position.
+	 */
+	bool isLogOp(void);
+
+	/**
+	 * Attempts to create a boolean token from the current position.
+	 */
+	bool isBoolOp(void);
+
+	/**
+	 * Attempts to create a comparison token from the current position.
+	 */
+	bool isCompOp(void);
+
+	/**
+	 * Attempts to create a negation token from the current position.
+	 */
+	bool isNegate(void);
+
 public:
 	
 	/**
