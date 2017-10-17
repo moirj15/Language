@@ -26,12 +26,14 @@ Token::~Token(void) {}
  * @param el: The reference to the ErrorLog that will be used for error
  * reporting.
  */
-Scanner::Scanner(FILE *sf, ErrorLog &el) : m_sourceFile(sf), m_el(el) {
+Scanner::Scanner(FILE *sf, ErrorLog *el) : m_sourceFile(sf), m_el(el) {
 	if (fseek(m_sourceFile, 0, SEEK_SET) < 0)
 		quit("Failed to seek file");
 	while (!feof(m_sourceFile)) {
-		m_source.push_back(fgetc(m_sourceFile));	
+		char ch = fgetc(m_sourceFile);
+		m_source.push_back(ch);
 	}
+	m_pos = 0;
 }
 
 /**
@@ -43,15 +45,14 @@ Scanner::~Scanner(void) {
 
 vector<Token> Scanner::scan(void) {
 	while (m_pos < m_source.size()) {
-		char curr = m_source[m_pos];
-		if (isDash(curr)) {
-			if (!isNegate())
-				isArithOp();
+		char ch = m_source[m_pos];
+		if (isdigit(ch)) {
+			isInteger();
 		}
-		if (isPlus(curr)) {
-		//	if (!isIncrement())
-		}
+		m_pos++;
 	}
+
+	return m_tokens;
 }
 
 /**
@@ -61,13 +62,15 @@ bool Scanner::isInteger(void) {
 	int curr = m_pos;
 	string num;
 	while (isdigit(m_source[curr])) {
+		//TODO: this isn't grabbing all the digits for the integer
 		num.push_back(m_source[curr]);
+		printf("num %s\n", num.c_str());
 		if (isxdigit(m_source[curr + 1]))
 			return false;
 	
 		else if (isPeriod(m_source[curr + 1]))
 			return false;
-	
+			
 		curr++;
 	}	
 	m_tokens.push_back(Token(INTEGER, num));
@@ -81,13 +84,13 @@ bool Scanner::isInteger(void) {
 bool Scanner::isArithOp(void) {
 	char curr = m_source[m_pos];
 	if (isPlus(curr)) 
-		m_tokens.push_back(Token(ADDITION_BINARY, string(1, curr)));
+		m_tokens.push_back(Token(ADDITION_BINARY, "+"));
 	else if (isDash(curr))
-		m_tokens.push_back(Token(SUBTRACTION_BINARY, string(1, curr)));
+		m_tokens.push_back(Token(SUBTRACTION_BINARY, "-"));
 	else if (isStar(curr))
-		m_tokens.push_back(Token(MULTIPLICATION_BINARY, string(1, curr)));
+		m_tokens.push_back(Token(MULTIPLICATION_BINARY, "*"));
 	else if (isForSlash(curr))
-		m_tokens.push_back(Token(DIVISION_BINARY, string(1, curr)));
+		m_tokens.push_back(Token(DIVISION_BINARY, "/"));
 	else
 		return false;
 	m_pos++;
@@ -101,19 +104,19 @@ bool Scanner::isLogOp(void) {
 	char curr = m_source[m_pos];
 	char la = m_source[m_pos + 1];
 	if (isAndPersand(curr)) 
-		m_tokens.push_back(Token(LOG_AND_BINARY, NULL));
+		m_tokens.push_back(Token(LOG_AND_BINARY, "&"));
 	else if (isVerBar(curr))
-		m_tokens.push_back(Token(LOG_OR_BINARY, NULL));
+		m_tokens.push_back(Token(LOG_OR_BINARY, "|"));
 	else if (isTilda(curr))
-		m_tokens.push_back(Token(LOG_INVERT, NULL));
+		m_tokens.push_back(Token(LOG_INVERT, "~"));
 	else if (isCarrot(curr))
-		m_tokens.push_back(Token(LOG_XOR_BINARY, NULL));
+		m_tokens.push_back(Token(LOG_XOR_BINARY, "^"));
 	else if (isLeftAngle(curr) && isLeftAngle(la)) {
-		m_tokens.push_back(Token(LEFT_SHIFT_BINARY, NULL));
+		m_tokens.push_back(Token(LEFT_SHIFT_BINARY, "<<"));
 		m_pos++;
 	}
 	else if(isRightAngle(curr) && isRightAngle(la)) {
-		m_tokens.push_back(Token(RIGHT_SHIFT_BINARY, NULL));
+		m_tokens.push_back(Token(RIGHT_SHIFT_BINARY, ">>"));
 		m_pos++;
 	}
 	else {
@@ -131,9 +134,9 @@ bool Scanner::isBoolOp(void) {
 	char curr = m_source[m_pos];
 	char la = m_source[m_pos + 1];
 	if (isAndPersand(curr) && isAndPersand(la))
-		m_tokens.push_back(Token(BOOL_AND, NULL));
+		m_tokens.push_back(Token(BOOL_AND, "&&"));
 	else if (isVerBar(curr) && isVerBar(la)) 
-		m_tokens.push_back(Token(BOOL_OR, NULL));
+		m_tokens.push_back(Token(BOOL_OR, "||"));
 	else 
 		return false;
 	
@@ -145,7 +148,25 @@ bool Scanner::isBoolOp(void) {
  * Attempts to create a comparison token from the current position.
  */
 bool Scanner::isCompOp(void) {
-
+	char curr = m_source[m_pos];
+	char la = m_source[m_pos + 1];
+	if (isLeftAngle(curr) && isEqual(la)) {
+		m_tokens.push_back(Token(LESS_THAN_EQL, "<="));
+		m_pos++;
+	}
+	else if (isRightAngle(curr) && isEqual(la)) {
+		m_tokens.push_back(Token(GREATER_THAN_EQL, ">="));
+		m_pos++;
+	}
+	else if (isLeftAngle(curr))
+		m_tokens.push_back(Token(LESS_THAN, "<"));
+	else if (isRightAngle(curr))
+		m_tokens.push_back(Token(GREATER_THAN, ">"));
+	else 
+		return false;
+	
+	m_pos++;
+	return true;
 }
 
 /**

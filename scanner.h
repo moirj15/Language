@@ -18,12 +18,14 @@ enum TOKEN_TYPE {
 	LOG_AND_BINARY,			// A $ B
 	LOG_XOR_BINARY,			// A ^ B
 	LOG_INVERT,				// ~A
+	// Comparisons
 	LESS_THAN,				// A < B
 	LESS_THAN_EQL,			// A <= B
 	GREATER_THAN,			// A > B
 	GREATER_THAN_EQL,		// A >= B
 	EQUAL_TO,				// A == B
 	NOT,					// !A
+	// END Comparisons
 	ASSIGNMENT,				// A = B
 	UNARY_ADDITION,			// A += B
 	UNARY_DIVISION,			// A /= B
@@ -58,7 +60,7 @@ struct Token {
 
 class Scanner {
 	FILE 			*m_sourceFile;	// The source file
-	ErrorLog 		&m_el;			// The ErrorLog that the scanner will report to
+	ErrorLog 		*m_el;			// The ErrorLog that the scanner will report to
 	vector<Token> 	m_tokens;		// The list of tokens.
 	vector<char> 	m_source;
 	int				m_pos;
@@ -102,7 +104,7 @@ public:
 	 * @param el: The reference to the ErrorLog that will be used for error
 	 * reporting.
 	 */
-	Scanner(FILE *sf, ErrorLog &el);
+	Scanner(FILE *sf, ErrorLog *el);
 	
 	/**
 	 * Destructor
