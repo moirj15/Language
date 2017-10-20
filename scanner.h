@@ -8,42 +8,24 @@
  * The token types that will be produced during lexical analysis
  */
 enum TOKEN_TYPE {
-	ADDITION_BINARY,		// A + B
-	SUBTRACTION_BINARY,		// A - B
-	DIVISION_BINARY,		// A / B
-	MULTIPLICATION_BINARY,	// A * B
-	LEFT_SHIFT_BINARY,		// A << B
-	RIGHT_SHIFT_BINARY,		// A >> B
-	LOG_OR_BINARY,			// A | B
-	LOG_AND_BINARY,			// A $ B
-	LOG_XOR_BINARY,			// A ^ B
-	LOG_INVERT,				// ~A
-	// Comparisons
-	LESS_THAN,				// A < B
-	LESS_THAN_EQL,			// A <= B
-	GREATER_THAN,			// A > B
-	GREATER_THAN_EQL,		// A >= B
-	EQUAL_TO,				// A == B
-	NOT,					// !A
-	// END Comparisons
-	ASSIGNMENT,				// A = B
-	UNARY_ADDITION,			// A += B
-	UNARY_DIVISION,			// A /= B
-	UNARY_SUBTRACTION,		// A -= B
-	NEGATION,				// -A
-	UNARY_MULTIPLICATION,	// A *= B
-	UNARY_LOG_OR,			// A |= B
-	UNARY_LOG_AND,			// A &= B
-	UNARY_LOG_XOR,			// A ^= B
-	INCREMENT,				// A++
-	DECREMENT,				// A--
-	NAME,					// name of something, can be type, function, etc.
+	PLUS,			// + 
+	DASH,			// -
+	FORWARD_SLASH,	// / 
+	STAR,			// *
+	VERTICAL_BAR,	// |
+	ANDPERSAND,		// &
+	CARROT,			// ^
+	TILDA,			// ~
+	LEFT_ANGLE,		// <
+	RIGHT_ANGLE,	// >
+	BANG,			// !
+	EQUAL_SIGN,		// =
+	NAME,			// name of something, can be type, function, etc.
 	WHITE_SPACE,
-	BOOL_AND,				// A && B
-	BOOL_OR,				// A || B
-	HASH,					// #
-	INTEGER,
-	FLOAT,
+	HASH,			// #
+	INTEGER,		// (0-9)*
+	PERIOD,			// .
+
 	NUMBER_OF_TOKENS
 };
 
@@ -65,36 +47,9 @@ class Scanner {
 	vector<char> 	m_source;
 	int				m_pos;
 
-	/**
-	 * Attempts to create a integer token from the current positon in the source.
-	 */
-	bool isInteger(void);
-
-	/**
-	 * Attempts to create an arithmetic token from the current position.
-	 */
-	bool isArithOp(void);
-
-	/**
-	 * Attempts to create a logical token from the current position.
-	 */
-	bool isLogOp(void);
-
-	/**
-	 * Attempts to create a boolean token from the current position.
-	 */
-	bool isBoolOp(void);
-
-	/**
-	 * Attempts to create a comparison token from the current position.
-	 */
-	bool isCompOp(void);
-
-	/**
-	 * Attempts to create a negation token from the current position.
-	 */
-	bool isNegate(void);
-
+	void createNum(void);
+	void createName(void);
+	void createReservedWord(string word);
 public:
 	
 	/**

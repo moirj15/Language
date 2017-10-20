@@ -14,6 +14,8 @@
 #define isBang(x)			(x == '!')
 #define isSemiColon(x)		(x == ';')
 #define isPeriod(x)			(x == '.')
+#define isDollarSign(x)		(x == '&')
+#define isHash(x)			(x == '#')
 
 Token::Token(uint32_t t, string d) : type(t), data(d) {}
 
@@ -46,8 +48,56 @@ Scanner::~Scanner(void) {
 vector<Token> Scanner::scan(void) {
 	while (m_pos < m_source.size()) {
 		char ch = m_source[m_pos];
-		if (isdigit(ch)) {
-			isInteger();
+		if (isPlus(ch)) {
+			m_tokens.push_back(Token(PLUS, "+"));
+		}
+		else if (isDash(ch)) {
+			m_tokens.push_back(Token(DASH, "-"));	
+		}
+		else if (isForSlash(ch)) {
+			m_tokens.push_back(Token(FORWARD_SLASH, "/"));	
+		}
+		else if (isStar(ch)) {
+			m_tokens.push_back(Token(STAR, "*"));	
+		}
+		else if (isVerBar(ch)) {
+			m_tokens.push_back(Token(VERTICAL_BAR, "|"));	
+		}
+		else if (isAndPersand(ch)) {
+			m_tokens.push_back(Token(ANDPERSAND, "&"));	
+		}
+		else if (isCarrot(ch)) {
+			m_tokens.push_back(Token(CARROT, "^"));	
+		}
+		else if (isTilda(ch)) {
+			m_tokens.push_back(Token(TILDA, "~"));	
+		}
+		else if (isLeftAngle(ch)) {
+			m_tokens.push_back(Token(LEFT_ANGLE, "<"));	
+		}
+		else if (isRightAngle(ch)) {
+			m_tokens.push_back();	
+		}
+		else if (isBang(ch)) {
+			m_tokens.push_back();	
+		}
+		else if (isEqual(ch)) {
+			m_tokens.push_back();	
+		}
+		else if (isspace(ch)) {
+
+		}
+		else if (isalpha(ch)) {
+
+		}
+		else if (isdigit(ch)) {
+
+		}
+		else if (isHash(ch)) {
+			m_tokens.push_back();	
+		}
+		else if (isPeriod(ch)) {
+			m_tokens.push_back();	
 		}
 		m_pos++;
 	}
@@ -55,138 +105,17 @@ vector<Token> Scanner::scan(void) {
 	return m_tokens;
 }
 
-/**
- * Attempts to create a integer token from the current positon in the source.
- */
-bool Scanner::isInteger(void) {
-	int curr = m_pos;
-	string num;
-	while (isdigit(m_source[curr])) {
-		//TODO: this isn't grabbing all the digits for the integer
-		num.push_back(m_source[curr]);
-		printf("num %s\n", num.c_str());
-		if (isxdigit(m_source[curr + 1]))
-			return false;
-	
-		else if (isPeriod(m_source[curr + 1]))
-			return false;
-			
-		curr++;
-	}	
-	m_tokens.push_back(Token(INTEGER, num));
-	m_pos = curr;
-	return true;
+
+void Scanner::createNum(void) {
+
 }
 
-/**
- * Attempts to create an arithmetic token from the current position.
- */
-bool Scanner::isArithOp(void) {
-	char curr = m_source[m_pos];
-	if (isPlus(curr)) 
-		m_tokens.push_back(Token(ADDITION_BINARY, "+"));
-	else if (isDash(curr))
-		m_tokens.push_back(Token(SUBTRACTION_BINARY, "-"));
-	else if (isStar(curr))
-		m_tokens.push_back(Token(MULTIPLICATION_BINARY, "*"));
-	else if (isForSlash(curr))
-		m_tokens.push_back(Token(DIVISION_BINARY, "/"));
-	else
-		return false;
-	m_pos++;
-	return true;
+void Scanner::createName(void) {
+
 }
+void Scanner::createReservedWord(string word) {
 
-/**
- * Attempts to create a logical token from the current position.
- */
-bool Scanner::isLogOp(void) {
-	char curr = m_source[m_pos];
-	char la = m_source[m_pos + 1];
-	if (isAndPersand(curr)) 
-		m_tokens.push_back(Token(LOG_AND_BINARY, "&"));
-	else if (isVerBar(curr))
-		m_tokens.push_back(Token(LOG_OR_BINARY, "|"));
-	else if (isTilda(curr))
-		m_tokens.push_back(Token(LOG_INVERT, "~"));
-	else if (isCarrot(curr))
-		m_tokens.push_back(Token(LOG_XOR_BINARY, "^"));
-	else if (isLeftAngle(curr) && isLeftAngle(la)) {
-		m_tokens.push_back(Token(LEFT_SHIFT_BINARY, "<<"));
-		m_pos++;
-	}
-	else if(isRightAngle(curr) && isRightAngle(la)) {
-		m_tokens.push_back(Token(RIGHT_SHIFT_BINARY, ">>"));
-		m_pos++;
-	}
-	else {
-		return false;
-	}
-	m_pos++;
-	return true;
-		
 }
-
-/**
- * Attempts to create a boolean token from the current position.
- */
-bool Scanner::isBoolOp(void) {
-	char curr = m_source[m_pos];
-	char la = m_source[m_pos + 1];
-	if (isAndPersand(curr) && isAndPersand(la))
-		m_tokens.push_back(Token(BOOL_AND, "&&"));
-	else if (isVerBar(curr) && isVerBar(la)) 
-		m_tokens.push_back(Token(BOOL_OR, "||"));
-	else 
-		return false;
-	
-	m_pos += 2;
-	return true;
-}
-
-/**
- * Attempts to create a comparison token from the current position.
- */
-bool Scanner::isCompOp(void) {
-	char curr = m_source[m_pos];
-	char la = m_source[m_pos + 1];
-	if (isLeftAngle(curr) && isEqual(la)) {
-		m_tokens.push_back(Token(LESS_THAN_EQL, "<="));
-		m_pos++;
-	}
-	else if (isRightAngle(curr) && isEqual(la)) {
-		m_tokens.push_back(Token(GREATER_THAN_EQL, ">="));
-		m_pos++;
-	}
-	else if (isLeftAngle(curr))
-		m_tokens.push_back(Token(LESS_THAN, "<"));
-	else if (isRightAngle(curr))
-		m_tokens.push_back(Token(GREATER_THAN, ">"));
-	else 
-		return false;
-	
-	m_pos++;
-	return true;
-}
-
-/**
- * Attempts to create a negation token from the current position.
- */
-bool Scanner::isNegate(void) {
-	uint32_t prevTok = m_tokens.back().type;
-	//TODO: check for all possible operations on previous token.
-	bool prevIsOp = (isDash(prevTok) || isPlus(prevTok) || isForSlash(prevTok) 
-					|| isStar(prevTok));
-	if (prevIsOp && isdigit(m_source[m_pos + 1])) {
-		m_tokens.push_back(Token(NEGATION, string(1, m_source[m_pos])));
-		return true;
-	}
-	return false;
-}
-
-
-
-
 
 
 
