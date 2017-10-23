@@ -76,28 +76,28 @@ vector<Token> Scanner::scan(void) {
 			m_tokens.push_back(Token(LEFT_ANGLE, "<"));	
 		}
 		else if (isRightAngle(ch)) {
-			m_tokens.push_back();	
+			m_tokens.push_back(Token(RIGHT_ANGLE, ">"));	
 		}
 		else if (isBang(ch)) {
-			m_tokens.push_back();	
+			m_tokens.push_back(Token(BANG, "!"));	
 		}
 		else if (isEqual(ch)) {
-			m_tokens.push_back();	
+			m_tokens.push_back(Token(EQUAL_SIGN, "="));	
 		}
 		else if (isspace(ch)) {
-
+			
 		}
 		else if (isalpha(ch)) {
-
+			createName();
 		}
 		else if (isdigit(ch)) {
-
+			createNum();
 		}
 		else if (isHash(ch)) {
-			m_tokens.push_back();	
+			m_tokens.push_back(Token(HASH, "#"));	
 		}
 		else if (isPeriod(ch)) {
-			m_tokens.push_back();	
+			m_tokens.push_back(Token(PERIOD, "."));	
 		}
 		m_pos++;
 	}
@@ -107,11 +107,25 @@ vector<Token> Scanner::scan(void) {
 
 
 void Scanner::createNum(void) {
-
+	char ch = m_source[m_pos];
+	string num;
+	while (isdigit(ch)) {
+		num.push_back(ch);
+		m_pos++;
+		ch = m_source[m_pos];
+	}
+	m_tokens.push_back(Token(NUMBER, num));
 }
 
 void Scanner::createName(void) {
-
+	char ch = m_source[m_pos];
+	string name;
+	while (isalpha(ch)) {
+		name.push_back(ch);
+		m_pos++;
+		ch = m_source[m_pos];
+	}
+	m_tokens.push_back(Token(NAME, name));
 }
 void Scanner::createReservedWord(string word) {
 

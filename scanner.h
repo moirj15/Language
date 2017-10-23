@@ -23,7 +23,7 @@ enum TOKEN_TYPE {
 	NAME,			// name of something, can be type, function, etc.
 	WHITE_SPACE,
 	HASH,			// #
-	INTEGER,		// (0-9)*
+	NUMBER,			// (0-9)*
 	PERIOD,			// .
 
 	NUMBER_OF_TOKENS
