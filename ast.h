@@ -25,4 +25,5 @@ struct IntegerAst : public AST {
     ~IntegerAst(void);
     void print(void);
 };
+
 #endif

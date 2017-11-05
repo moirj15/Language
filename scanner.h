@@ -8,10 +8,10 @@
  * The token types that will be produced during lexical analysis
  */
 enum TOKEN_TYPE {
+	STAR,			// *
+	FORWARD_SLASH,	// / 
 	PLUS,			// + 
 	DASH,			// -
-	FORWARD_SLASH,	// / 
-	STAR,			// *
 	VERTICAL_BAR,	// |
 	ANDPERSAND,		// &
 	CARROT,			// ^
@@ -25,7 +25,9 @@ enum TOKEN_TYPE {
 	HASH,			// #
 	NUMBER,			// (0-9)*
 	PERIOD,			// .
-
+	SEMI_COLON,
+	LEFT_PAREN,
+	RIGHT_PAREN,
 	NUMBER_OF_TOKENS
 };
 
