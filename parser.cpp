@@ -77,6 +77,10 @@ vector<Token> *Parser::toPostFix(uint32_t end) {
 	return result;
 }
 
+bool Parser::isEqualOrLess(uint32_t op, uint32_t type) {
+
+}
+
 
 
 

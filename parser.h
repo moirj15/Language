@@ -26,7 +26,7 @@ private:
 	 * @return: List containing the postfix expression.
 	 */
 	vector<Token> *toPostFix(uint32_t end);
-
+	bool isEqualOrLess(uint32_t op, uint32_t type);
 };
 
 

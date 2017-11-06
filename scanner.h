@@ -7,29 +7,78 @@
 /**
  * The token types that will be produced during lexical analysis
  */
-enum TOKEN_TYPE {
-	STAR,			// *
-	FORWARD_SLASH,	// / 
-	PLUS,			// + 
-	DASH,			// -
-	VERTICAL_BAR,	// |
-	ANDPERSAND,		// &
-	CARROT,			// ^
-	TILDA,			// ~
-	LEFT_ANGLE,		// <
-	RIGHT_ANGLE,	// >
-	BANG,			// !
-	EQUAL_SIGN,		// =
-	NAME,			// name of something, can be type, function, etc.
-	WHITE_SPACE,
-	HASH,			// #
-	NUMBER,			// (0-9)*
-	PERIOD,			// .
-	SEMI_COLON,
-	LEFT_PAREN,
-	RIGHT_PAREN,
-	NUMBER_OF_TOKENS
-};
+
+enum TokenType {
+	COMMA,					// ,
+	ASSIGNMENT,				// =
+	SUM_ASSIGNMENT,			// +=
+	SUB_ASSIGNMENT,			// -=
+	MULT_ASSIGNMENT,		// *=
+	DIV_ASSIGNMENT,			// /=
+	REM_ASSIGNMENT,			// %=
+	SHIFT_LEFT_ASSIGNMENT,	// <<=
+	SHIFT_RIGHT_ASSIGNMENT,	// >>=
+	AND_ASSIGNMENT,			// &=
+	XOR_ASSIGNMENT,			// ^=
+	OR_ASSIGNMENT,			// |=
+	TERNARY_CONDITIONAL,	// ?=
+	LOG_OR,					// ||
+	LOG_AND,				// &&
+	BIT_OR,					// |
+	BIT_XOR,				// ^
+	BIT_AND,				// &
+	EQUAL_TO,				// ==
+	NOT_EQUAL_TO,			// !=
+	GREATER_THAN,			// >
+	GREATER_THAN_EQL,		// >=
+	LESS_THAN,				// <
+	LESS_THAN_EQL,			// <=
+	LEFT_SHIFT,				// <<
+	RIGHT_SHIFT,			// >>
+	ADDITION,				// +
+	SUBTRACTION,			// -
+	MULTIPLICATION,			// *
+	DIVISION,				// /
+	REMAINDER,				// %
+	SIZEOF,					// sizeof()
+	ADDRESS_OF,				// &var
+	DEREFERENCE,			// *var
+	TYPE_CAST,				// (type)
+	LOG_NOT,				// !
+	BIT_NOT,				// ~
+	PREFIX_INC,				// ++var
+	PREFIX_DEC,				// --var
+	MEMBER_ACCESS,			// struct.member
+	ARRAY_SUBSCRIPT,		// arr[]
+	FUNCTION_CALL,			// name()
+	METHOD_CALL,			// struct.name()
+	POSTFIX_INC,			// var++
+	POSTFIX_DEX,			// var--
+}
+
+enum ReservedWord {
+	BOOL,
+	CHAR,
+	SHORT,
+	INT,
+	LONG,
+	LONG_LONG,
+	UNSIGNED,
+	VOID,
+	FOR,
+	WHILE,
+	STRUCT,
+	WITH,
+	METHOD,
+	INIT,
+	FUNC,
+	DO,
+	IF,
+	ELSE,
+	DELETE,
+	NEW,
+
+}
 
 /**
  * Container for the tokens.
@@ -49,9 +98,6 @@ class Scanner {
 	vector<char> 	m_source;
 	int				m_pos;
 
-	void createNum(void);
-	void createName(void);
-	void createReservedWord(string word);
 public:
 	
 	/**
@@ -72,6 +118,12 @@ public:
 	 * Scans the source file and produces a list of tokens.
 	 */
 	vector<Token> scan(void);	
+private:
+	void createNum(void);
+	void createName(void);
+	void createReservedWord(string word);
+
+
 };
 
 #endif
