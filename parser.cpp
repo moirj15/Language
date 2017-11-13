@@ -26,10 +26,10 @@ vector<Token> *Parser::toPostFix(uint32_t end) {
 	stack<Token> stk;
 	while (pos < end) {
 		Token op = tokens[pos];
-		if (op.type == NUMBER) {
+		if (op.type == INTEGER) {
 			result->push_back(tokens[pos]);
 		}
-		else if (op.type <= TILDA) {
+		else if (op.type <= TILDA) {// TODO: fix this
 			while (stk.size() >= 0) {
 				if (stk.empty()) {
 					stk.push(tokens[pos]);

@@ -54,7 +54,11 @@ enum TokenType {
 	METHOD_CALL,			// struct.name()
 	POSTFIX_INC,			// var++
 	POSTFIX_DEX,			// var--
-}
+	SEMI_COLON,
+	LEFT_PAREN,
+	RIGHT_PAREN,
+	INTEGER,
+};
 
 enum ReservedWord {
 	BOOL,
@@ -78,7 +82,7 @@ enum ReservedWord {
 	DELETE,
 	NEW,
 
-}
+};
 
 /**
  * Container for the tokens.
@@ -122,7 +126,10 @@ private:
 	void createNum(void);
 	void createName(void);
 	void createReservedWord(string word);
-
+	void createAddOps(void);
+	void createSubOps(void);
+	void createMultOps(void);
+	void createDivOps(void);
 
 };
 

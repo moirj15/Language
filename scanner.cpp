@@ -16,7 +16,7 @@
 #define isPeriod(x)			(x == '.')
 #define isDollarSign(x)		(x == '&')
 #define isHash(x)			(x == '#')
-
+#define isPercent(x)		(x == '%')
 Token::Token(uint32_t t, string d) : type(t), data(d) {}
 
 Token::~Token(void) {}
@@ -46,90 +46,111 @@ Scanner::~Scanner(void) {
 }
 
 vector<Token> Scanner::scan(void) {
-	while (m_pos < m_source.size()) {
-		char ch = m_source[m_pos];
-		if (isPlus(ch)) {
-			m_tokens.push_back(Token(PLUS, "+"));
-		}
-		else if (isDash(ch)) {
-			m_tokens.push_back(Token(DASH, "-"));	
-		}
-		else if (isForSlash(ch)) {
-			m_tokens.push_back(Token(FORWARD_SLASH, "/"));	
-		}
-		else if (isStar(ch)) {
-			m_tokens.push_back(Token(STAR, "*"));	
-		}
-		else if (isVerBar(ch)) {
-			m_tokens.push_back(Token(VERTICAL_BAR, "|"));	
-		}
-		else if (isAndPersand(ch)) {
-			m_tokens.push_back(Token(ANDPERSAND, "&"));	
-		}
-		else if (isCarrot(ch)) {
-			m_tokens.push_back(Token(CARROT, "^"));	
-		}
-		else if (isTilda(ch)) {
-			m_tokens.push_back(Token(TILDA, "~"));	
-		}
-		else if (isLeftAngle(ch)) {
-			m_tokens.push_back(Token(LEFT_ANGLE, "<"));	
-		}
-		else if (isRightAngle(ch)) {
-			m_tokens.push_back(Token(RIGHT_ANGLE, ">"));	
-		}
-		else if (isBang(ch)) {
-			m_tokens.push_back(Token(BANG, "!"));	
-		}
-		else if (isEqual(ch)) {
-			m_tokens.push_back(Token(EQUAL_SIGN, "="));	
-		}
-		else if (isspace(ch)) {
-			
-		}
-		else if (isalpha(ch)) {
-			createName();
-		}
-		else if (isdigit(ch)) {
+	while(m_pos < m_source.size()) {
+		char c = m_source[m_pos];
+		if (isdigit(c)) {
 			createNum();
 		}
-		else if (isHash(ch)) {
-			m_tokens.push_back(Token(HASH, "#"));	
+		else if (isalpha(c)) {
+			createName();
 		}
-		else if (isPeriod(ch)) {
-			m_tokens.push_back(Token(PERIOD, "."));	
+		else if (isspace(c)) {
+			m_pos++;
 		}
-		m_pos++;
+		else if (isPlus(c)) {
+			createAddOps();
+		}
+		else if (isDash(c)) {
+			createSubOps();
+		}
+		else if (isStar(c)) {
+			createMultOps();
+		}
+		else if (isForSlash(c)) {
+			createDivOps();
+		}
+		else if (isRightAngle(c)) {
+			
+		}
+		else if (isLeftAngle(c)) {
+		
+		}
+		else if (isPercent(c)) {
+		
+		}
+		else if (isAndPersand(c)) {
+		
+		}
+		else if (isVerBar(c)) {
+		
+		}
 	}
-
-	return m_tokens;
 }
 
 
 void Scanner::createNum(void) {
-	char ch = m_source[m_pos];
+	uint32_t tPos = m_pos; // in case we need to roll back
+	char c;
 	string num;
-	while (isdigit(ch)) {
-		num.push_back(ch);
-		m_pos++;
-		ch = m_source[m_pos];
-	}
-	m_tokens.push_back(Token(NUMBER, num));
+	do {
+		c = m_source[tPos];
+		num.push_back(c);
+		tPos++;
+		//TODO: add some error checking
+	} while (isdigit(c));
+
+	m_tokens.push_back(Token(INTEGER, num));
+	m_pos = tPos;
 }
 
 void Scanner::createName(void) {
-	char ch = m_source[m_pos];
-	string name;
-	while (isalpha(ch)) {
-		name.push_back(ch);
-		m_pos++;
-		ch = m_source[m_pos];
-	}
-	m_tokens.push_back(Token(NAME, name));
+	// TODO: implement
 }
+
 void Scanner::createReservedWord(string word) {
+	// TODO: implement
+}
+
+
+void Scanner::createAddOps(void) {
+	uint32_t tmp = m_pos + 1;
+	char curr = m_source[tmp];
+	string add;
+	add.push_back(m_source[m_pos]);
+	switch (curr) {
+		case '+':
+			add.push_back('+');
+			m_tokens.push_back(Token())
+			tmp++;
+			break;
+
+		case '=':
+			add.push_back('=');
+
+			break;
+
+		default:
+			break;
+	}
+}
+
+void Scanner::createSubOps(void) {
 
 }
+
+void Scanner::createMultOps(void) {
+
+}
+
+void Scanner::createDivOps(void) {
+
+}
+
+
+
+
+
+
 
 
 
