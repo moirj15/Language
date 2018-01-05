@@ -12,8 +12,8 @@ enum TOKEN_IDENTIFER {
     HEXADECIMAL_LITERAL,// 0x(0..9)*
     OCTAL_LITERAL,		// 0(0..7)*
     FLOAT_LITERAL,		// (0..9).(0..9)*		
-	EOF,
-}
+	END_OF_FILE,
+};
 
 /**
  * Simple struct containing an identifier and data.
@@ -39,6 +39,11 @@ struct Token {
  	 * Destructor.
  	 */
 	~Token(void);
+	
+    /**
+     * Prints the Token to stdout. 
+     */
+	void printToken(void);
 };
 
 /**
@@ -46,7 +51,7 @@ struct Token {
  */
 class Scanner {
 	FILE 				*currFile;
-    std::vector<char> 	fileContents;
+    std::vector<char> 	fileContent;
     std::vector<Token> 	tokens;
 	uint64				pos;
 public:
@@ -62,13 +67,33 @@ public:
 	~Scanner(void);
 
     /**
-     * Load a new file into the character array.
+     * Load a new file for scanning.
+     *
+     * @param newFile: The file that will be loaded.
      */
-    void changeFile(File *newFile);
+    void changeFile(FILE *newFile);
+
+	/**
+     * Tokenize the contents of the currently loaded file.
+     */
     void tokenize(void);
+
+    inline std::vector<Token> getTokens(void) {return tokens;}
 private:
+
+    /**
+     * Skips upto the first non-whitespace character. 
+     */
     void skipWhiteSpace(void);
-	bool scanForName(void);
+
+    /**
+     * Scans for an identifier in the currently loaded file.
+     */
+	bool scanForIdentifier(void);
+
+    /**
+     * Scans for an integer literal in the currently loaded file.
+     */
     bool scanForIntLit(void);
     bool scanForHexLit(void);
     bool scanForOctalLit(void);

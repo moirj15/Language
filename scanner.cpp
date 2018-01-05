@@ -62,13 +62,39 @@ Token::~Token(void) {
 
 }
 
+/**
+ * Prints the Token to stdout. 
+ */
+void Token::printToken(void) {
+    printf("data: %s identifier: ", data.c_str());
+    switch (identifier) {
+        case INTEGER_LITERAL:
+        	printf("INTEGER_LITERAL\n");
+	        break;
+
+        case HEXADECIMAL_LITERAL:
+        	printf("HEXADECIMAL_LITERAL\n");
+        	break;
+
+        case OCTAL_LITERAL:
+        	printf("OCTAL_LITERAL\n");
+        	break;
+
+        case FLOAT_LITERAL:
+        	printf("FLOAT_LITERAL\n");
+        	break;
+
+        case END_OF_FILE:
+        	printf("END_OF_FILE\n");
+        	break;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
-// End token related code
+// Scanner related code
 ////////////////////////////////////////////////////////////////////////////////
 
 Scanner::Scanner(void) {
-    fileContents();
-    tokens();
     currFile = NULL;
 }
 
@@ -76,33 +102,40 @@ Scanner::~Scanner(void) {
     closeFile(currFile);	// close file handle
 }
 
-
-void Scanner::changeFile(File *newFile) {
+/**
+ * Load a new file for scanning.
+ *
+ * @param newFile: The file that will be loaded.
+ */
+void Scanner::changeFile(FILE *newFile) {
     currFile = newFile;
-    if (!fileContents.isEmpty()) {
-        fileContents.clear();
+    if (!fileContent.empty()) {
+        fileContent.clear();
 		tokens.clear();
     }
 	while (!feof(currFile)) {
-        fileContents.push_back(fgetc(currFile));
+        fileContent.push_back(fgetc(currFile));
     }
-    fileContents.push_back(EOF);
+    fileContent.push_back(EOF);
 }
 
+/**
+ * Tokenize the contents of the currently loaded file.
+ */
 void Scanner::tokenize(void) {
 	if (!currFile) {	// make sure the current file isn't null
         quit("CurrFile is NULL");
     }
     //TODO: consider putting current char in it's on var
-    while (fileContents[pos] != EOF) { 
+    while (fileContent[pos] != EOF) { 
 		bool found = false;
-        if (isspace(fileContents[pos])) {
+        if (isspace(fileContent[pos])) {
             skipWhiteSpace();
         }
-        if (isalpha(fileContents[pos])) {
-			scanForName();
+        if (isalpha(fileContent[pos])) {
+			scanForIdentifier();
         }
-        if (isdigit(fileContents[pos])) {
+        if (isdigit(fileContent[pos])) {
 			found = scanForIntLit();
             //TODO: Consider adding some sort of short circuit
             // ex: if a '.' is found in an intLiteral then jump to scanForFloat
@@ -117,23 +150,23 @@ void Scanner::tokenize(void) {
             }
         }
     }
-    tokens.push_back(std::string(""), EOF);
+    tokens.push_back(Token(std::string(""), EOF));
 }
 
 
 void Scanner::skipWhiteSpace(void) {
-    while (isspace(fileContents[pos]) && (fileContents[pos] != EOF)) {
+    while (isspace(fileContent[pos]) && (fileContent[pos] != EOF)) {
         pos++;
     }
 }
 
-bool Scanner::scanForName(void) {
+bool Scanner::scanForIdentifier(void) {
     
 }
 
 bool Scanner::scanForIntLit(void) {
     uint64 tempPos = pos;
-    std::string data();
+    std::string data;
     while (isdigit(fileContent[tempPos])) {
         data.push_back(fileContent[tempPos]);
         tempPos++;
@@ -148,7 +181,9 @@ bool Scanner::scanForIntLit(void) {
 		// TODO: call error log
         return false;
     }
-	return true; // it's an int literal
+	tokens.push_back(Token(data, INTEGER_LITERAL));
+    pos = tempPos;
+    return true; // it's an int literal
 }
 
 bool Scanner::scanForHexLit(void) {
