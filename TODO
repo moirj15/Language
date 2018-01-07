@@ -8,3 +8,6 @@ Error Handler TODO:
     	- line number
         - file name
         - error
+
+Library TODO:
+	+ replace c++ strings

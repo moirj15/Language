@@ -4,3 +4,8 @@
 *.vcxproj.filters
 *.vcxproj.user
 x64/
+CMakeCache.txt
+*CMakeFiles/
+CMakeLists.txt
+Jay_lang
+cmake_install.cmake

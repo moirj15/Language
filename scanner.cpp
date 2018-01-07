@@ -84,6 +84,10 @@ void Token::printToken(void) {
         	printf("FLOAT_LITERAL\n");
         	break;
 
+    	case SEMI_COLON:
+        	printf("SEMI_COLON\n");
+        	break;
+
         case END_OF_FILE:
         	printf("END_OF_FILE\n");
         	break;
@@ -96,6 +100,13 @@ void Token::printToken(void) {
 
 Scanner::Scanner(void) {
     currFile = NULL;
+}
+
+/**
+ * Constructor.
+ */
+Scanner::Scanner(ErrorLog *errs) : errorLog(errs) {
+    
 }
 
 Scanner::~Scanner(void) {
@@ -129,6 +140,10 @@ void Scanner::tokenize(void) {
     //TODO: consider putting current char in it's on var
     while (fileContent[pos] != EOF) { 
 		bool found = false;
+		if (errorLog->errorFound) {
+            skipToNextValidToken();
+            errorLog->errorFound = false;
+        }	
         if (isspace(fileContent[pos])) {
             skipWhiteSpace();
         }
@@ -149,24 +164,61 @@ void Scanner::tokenize(void) {
                 found = scanForFloatLit();
             }
         }
+        if (isSemiColon(fileContent[pos])) {
+            tokens.push_back(Token(std::string(";"), SEMI_COLON));
+            pos++;
+        }
     }
     tokens.push_back(Token(std::string(""), EOF));
 }
 
-
+/**
+ * Skips upto the first non-whitespace character. 
+ */
 void Scanner::skipWhiteSpace(void) {
     while (isspace(fileContent[pos]) && (fileContent[pos] != EOF)) {
         pos++;
     }
 }
 
-bool Scanner::scanForIdentifier(void) {
-    
+/**
+ * Skips to the next line of code in an attempt to move to the next safe Token.
+ */
+void Scanner::skipToNextValidToken(void) {
+    while (!isSemiColon(fileContent[pos])) {
+        pos++;
+    }
 }
 
+/**
+ * Scans for an identifier in the currently loaded file.
+ */
+bool Scanner::scanForIdentifier(void) {
+    uint64 tempPos = pos;
+    std::string data;
+	while (isalnum(fileContent[tempPos]) || isUnderScore(fileContent[tempPos])) {
+		data.push_back(fileContent[tempPos]);
+        pos++;
+    }
+    if (!isspace(fileContent[tempPos]) || !isLeftParen(fileContent[tempPos])) {
+        errorLog->reportError("Unexpected character in identifier");
+        return false;
+    }
+    //TODO: check for reserved words
+    tokens.push_back(Token(data, IDENTIFIER));
+    tempPos = pos;
+    return true;
+}
+
+/**
+ * Scans for an integer literal in the currently loaded file.
+ */
 bool Scanner::scanForIntLit(void) {
     uint64 tempPos = pos;
     std::string data;
+	if (fileContent[tempPos] == '0') {
+        return false;
+    }
     while (isdigit(fileContent[tempPos])) {
         data.push_back(fileContent[tempPos]);
         tempPos++;
@@ -179,6 +231,7 @@ bool Scanner::scanForIntLit(void) {
     }
     else if (isalpha(fileContent[tempPos])){
 		// TODO: call error log
+		errorLog->reportError("Unexpected character in Int literal");
         return false;
     }
 	tokens.push_back(Token(data, INTEGER_LITERAL));
@@ -186,16 +239,91 @@ bool Scanner::scanForIntLit(void) {
     return true; // it's an int literal
 }
 
+/**
+ * Scans for a hexadecimal literal in the currently loaded file.
+ */
 bool Scanner::scanForHexLit(void) {
-    
+	uint64 tempPos = pos;
+    std::string data;
+    data.push_back(fileContent[tempPos]);
+    tempPos++;
+    if (fileContent[tempPos] != 'x') {
+        return false;	// Not a hex literal
+    }
+    data.push_back(fileContent[tempPos]);
+    tempPos++;
+    while (isxdigit(fileContent[tempPos])) {
+        data.push_back(fileContent[tempPos]);
+        tempPos++;
+    }
+    if (fileContent[tempPos] == '.') {
+    	// TODO: call error log
+		errorLog->reportError("Unexpected character in Hex literal");
+        return false;
+    }
+
+    tokens.push_back(Token(data, HEXADECIMAL_LITERAL));
+    pos = tempPos;
+	return true;
 }
 
+/**
+ * Scans for an octal literal in the currently loaded file.
+ */
 bool Scanner::scanForOctalLit(void) {
-    
+	// NOTE: if the number starts as an octal but then later inludes non octal
+    // digits then the program loops forever, need to make a skip to next Token
+    // method after calling error log.
+    uint64 tempPos = pos;
+    std::string data;
+	if (fileContent[tempPos] != '0') {
+        return false;	// Not an octal number.
+    }
+    data.push_back(fileContent[tempPos]);
+    tempPos++;
+    while ((fileContent[tempPos] <= '7') && (fileContent[tempPos] >= '0')) {
+        data.push_back(fileContent[tempPos]);
+        tempPos++;
+    }
+    if (fileContent[tempPos] >= '7' || fileContent[tempPos] == '.') {
+        return false;	// Not an octal number, must be a float 
+    }
+    tokens.push_back(Token(data, OCTAL_LITERAL));
+    pos = tempPos;
+    return true;
 }
 
+/**
+ * Scans for a float literal in the currently loaded file.
+ */
 bool Scanner::scanForFloatLit(void) {
-    
+    uint64 tempPos = pos;
+    std::string data;
+   	while (isdigit(fileContent[tempPos])) {
+        data.push_back(fileContent[tempPos]);
+        tempPos++;
+    }
+    if (fileContent[tempPos] != '.') {
+        errorLog->reportError("Unexpected character in Float literal");
+        return false;	// Not a float, must be an error, call error log
+    }
+    data.push_back(fileContent[tempPos]);
+    tempPos++;
+   	while (isdigit(fileContent[tempPos])) {
+        data.push_back(fileContent[tempPos]);
+        tempPos++;
+    }
+	if (fileContent[tempPos] == 'f') {
+        data.push_back(fileContent[tempPos]);
+        tempPos++;
+    }
+    else if (isalpha(fileContent[tempPos])) {
+        errorLog->reportError("Unexpected character in Float literal");
+        return false;
+    }
+    tokens.push_back(Token(data, FLOAT_LITERAL));
+    pos = tempPos;
+    return true;
 }
 
 

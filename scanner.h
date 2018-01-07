@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include "utils.h"
+#include "errorLog.h"
+
 namespace Lex {
  
 
@@ -12,7 +14,12 @@ enum TOKEN_IDENTIFER {
     HEXADECIMAL_LITERAL,// 0x(0..9)*
     OCTAL_LITERAL,		// 0(0..7)*
     FLOAT_LITERAL,		// (0..9).(0..9)*		
-	END_OF_FILE,
+	SEMI_COLON,
+	IDENTIFIER,
+
+
+
+    END_OF_FILE,
 };
 
 /**
@@ -54,12 +61,19 @@ class Scanner {
     std::vector<char> 	fileContent;
     std::vector<Token> 	tokens;
 	uint64				pos;
+    ErrorLog			*errorLog;
+
 public:
 
     /**
      * Constructor.
      */
 	Scanner(void);
+
+    /**
+     * Constructor.
+     */
+	Scanner(ErrorLog *errs);
 
     /**
      * Destructor.
@@ -87,6 +101,11 @@ private:
     void skipWhiteSpace(void);
 
     /**
+     * Skips to the next valid Token.
+     */
+	void skipToNextValidToken(void);
+
+    /**
      * Scans for an identifier in the currently loaded file.
      */
 	bool scanForIdentifier(void);
@@ -95,8 +114,20 @@ private:
      * Scans for an integer literal in the currently loaded file.
      */
     bool scanForIntLit(void);
+
+	/**
+     * Scans for a hexadecimal literal in the currently loaded file.
+     */
     bool scanForHexLit(void);
+
+    /**
+	 * Scans for an octal literal in the currently loaded file.
+	 */
     bool scanForOctalLit(void);
+    
+    /**
+	 * Scans for a float literal in the currently loaded file.
+	 */
     bool scanForFloatLit(void);
 };
 
