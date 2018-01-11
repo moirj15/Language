@@ -2,6 +2,11 @@
 #include "errorLog.h"
 #include "scanner.h"
 
+void printTokens(std::vector<Lex::Token> toks) {
+    for (uint64 i = 0; i < toks.size(); i++) {
+        toks[i].printToken();
+    }
+}
 
 int main(int argc, char **argv) {
 	FILE *source = openFile("test.jay", "r");
@@ -13,7 +18,7 @@ int main(int argc, char **argv) {
     scanner->tokenize();
     std::vector<Lex::Token> tokens = scanner->getTokens();
 
-	tokens[0].printToken();
+    printTokens(tokens);
 	errs.printErrors();	
     delete(scanner);
     return EXIT_SUCCESS;

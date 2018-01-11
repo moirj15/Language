@@ -123,6 +123,33 @@ Jay_lang/fast:
 	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/build
 .PHONY : Jay_lang/fast
 
+ast.o: ast.cpp.o
+
+.PHONY : ast.o
+
+# target to build an object file
+ast.cpp.o:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/ast.cpp.o
+.PHONY : ast.cpp.o
+
+ast.i: ast.cpp.i
+
+.PHONY : ast.i
+
+# target to preprocess a source file
+ast.cpp.i:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/ast.cpp.i
+.PHONY : ast.cpp.i
+
+ast.s: ast.cpp.s
+
+.PHONY : ast.s
+
+# target to generate assembly for a file
+ast.cpp.s:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/ast.cpp.s
+.PHONY : ast.cpp.s
+
 errorLog.o: errorLog.cpp.o
 
 .PHONY : errorLog.o
@@ -176,6 +203,33 @@ main.s: main.cpp.s
 main.cpp.s:
 	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/main.cpp.s
 .PHONY : main.cpp.s
+
+parser.o: parser.cpp.o
+
+.PHONY : parser.o
+
+# target to build an object file
+parser.cpp.o:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/parser.cpp.o
+.PHONY : parser.cpp.o
+
+parser.i: parser.cpp.i
+
+.PHONY : parser.i
+
+# target to preprocess a source file
+parser.cpp.i:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/parser.cpp.i
+.PHONY : parser.cpp.i
+
+parser.s: parser.cpp.s
+
+.PHONY : parser.s
+
+# target to generate assembly for a file
+parser.cpp.s:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/parser.cpp.s
+.PHONY : parser.cpp.s
 
 scanner.o: scanner.cpp.o
 
@@ -240,12 +294,18 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Jay_lang"
+	@echo "... ast.o"
+	@echo "... ast.i"
+	@echo "... ast.s"
 	@echo "... errorLog.o"
 	@echo "... errorLog.i"
 	@echo "... errorLog.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... parser.o"
+	@echo "... parser.i"
+	@echo "... parser.s"
 	@echo "... scanner.o"
 	@echo "... scanner.i"
 	@echo "... scanner.s"

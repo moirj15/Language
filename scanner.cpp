@@ -88,7 +88,15 @@ void Token::printToken(void) {
         	printf("SEMI_COLON\n");
         	break;
 
-        case END_OF_FILE:
+    	case IDENTIFIER:
+        	printf("IDENTIFIER\n");
+        	break;
+
+	    case ADD_OP:
+			printf("ADD_OP\n");
+            break;
+
+    	case END_OF_FILE:
         	printf("END_OF_FILE\n");
         	break;
     }
@@ -168,8 +176,11 @@ void Scanner::tokenize(void) {
             tokens.push_back(Token(std::string(";"), SEMI_COLON));
             pos++;
         }
+		if (isPlus(fileContent[pos])) {
+            scanForAddOp();
+        }
     }
-    tokens.push_back(Token(std::string(""), EOF));
+    tokens.push_back(Token(std::string(""), END_OF_FILE));
 }
 
 /**
@@ -197,16 +208,16 @@ bool Scanner::scanForIdentifier(void) {
     uint64 tempPos = pos;
     std::string data;
 	while (isalnum(fileContent[tempPos]) || isUnderScore(fileContent[tempPos])) {
-		data.push_back(fileContent[tempPos]);
-        pos++;
+        data.push_back(fileContent[tempPos]);
+        tempPos++;
     }
-    if (!isspace(fileContent[tempPos]) || !isLeftParen(fileContent[tempPos])) {
+    if (!isSemiColon(fileContent[tempPos]) && !isLeftParen(fileContent[tempPos])) {
         errorLog->reportError("Unexpected character in identifier");
         return false;
     }
     //TODO: check for reserved words
     tokens.push_back(Token(data, IDENTIFIER));
-    tempPos = pos;
+    pos = tempPos;
     return true;
 }
 
@@ -271,22 +282,24 @@ bool Scanner::scanForHexLit(void) {
  * Scans for an octal literal in the currently loaded file.
  */
 bool Scanner::scanForOctalLit(void) {
-	// NOTE: if the number starts as an octal but then later inludes non octal
-    // digits then the program loops forever, need to make a skip to next Token
-    // method after calling error log.
     uint64 tempPos = pos;
     std::string data;
-	if (fileContent[tempPos] != '0') {
+    char currChar = fileContent[tempPos];
+
+    if (currChar != '0') {
         return false;	// Not an octal number.
     }
-    data.push_back(fileContent[tempPos]);
+    data.push_back(currChar);
     tempPos++;
-    while ((fileContent[tempPos] <= '7') && (fileContent[tempPos] >= '0')) {
-        data.push_back(fileContent[tempPos]);
+    currChar = fileContent[tempPos];
+    while ((currChar <= '7') && (currChar >= '0')) {
+        data.push_back(currChar);
         tempPos++;
+        currChar = fileContent[tempPos];
     }
-    if (fileContent[tempPos] >= '7' || fileContent[tempPos] == '.') {
-        return false;	// Not an octal number, must be a float 
+    if ((currChar > '7' || currChar == '.') && currChar != ';') {
+		printf("%c\n", fileContent[tempPos]);
+        return false;	// Not an octal number, must be a float
     }
     tokens.push_back(Token(data, OCTAL_LITERAL));
     pos = tempPos;
@@ -327,6 +340,13 @@ bool Scanner::scanForFloatLit(void) {
 }
 
 
+/**
+ * Scans for an add op.
+ */
+void Scanner::scanForAddOp(void) {
+    tokens.push_back(Token(std::string("+"), ADD_OP));
+    pos++;
+}
 
 
 

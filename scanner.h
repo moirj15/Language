@@ -9,14 +9,14 @@
 namespace Lex {
  
 
-enum TOKEN_IDENTIFER {
+enum TOKEN_IDENTIFER : uint64 {
 	INTEGER_LITERAL,	// (1..9)(1..9)*
     HEXADECIMAL_LITERAL,// 0x(0..9)*
     OCTAL_LITERAL,		// 0(0..7)*
     FLOAT_LITERAL,		// (0..9).(0..9)*		
 	SEMI_COLON,
 	IDENTIFIER,
-
+	ADD_OP,
 
 
     END_OF_FILE,
@@ -129,6 +129,11 @@ private:
 	 * Scans for a float literal in the currently loaded file.
 	 */
     bool scanForFloatLit(void);
+
+    /**
+     * Scans for an add op.
+     */
+	void scanForAddOp(void);
 };
 
 }; // end namespace

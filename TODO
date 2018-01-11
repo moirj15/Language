@@ -9,5 +9,10 @@ Error Handler TODO:
         - file name
         - error
 
+Parser TODO:
+	+ write AST tree and sub-classes
+    + write the parser
+    + hook up LLVM
+
 Library TODO:
 	+ replace c++ strings
