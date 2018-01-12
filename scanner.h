@@ -9,7 +9,7 @@
 namespace Lex {
  
 
-enum TOKEN_IDENTIFER : uint64 {
+enum TOKEN_IDENTIFER {
 	INTEGER_LITERAL,	// (1..9)(1..9)*
     HEXADECIMAL_LITERAL,// 0x(0..9)*
     OCTAL_LITERAL,		// 0(0..7)*

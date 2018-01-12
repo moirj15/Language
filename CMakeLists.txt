@@ -15,4 +15,4 @@ add_executable(
 	parser.cpp
 )
 
-set(CMAKE_CXX+FLAGS "-std=c++17 -Wall -Wextra -pedantic")
+set(CMAKE_CXX+FLAGS "-std=c++11 -Wall -Wextra -pedantic")

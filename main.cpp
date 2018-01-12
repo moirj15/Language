@@ -1,6 +1,8 @@
 #include "utils.h"
 #include "errorLog.h"
 #include "scanner.h"
+#include "ast.h"
+#include "parser.h"
 
 void printTokens(std::vector<Lex::Token> toks) {
     for (uint64 i = 0; i < toks.size(); i++) {
@@ -20,6 +22,13 @@ int main(int argc, char **argv) {
 
     printTokens(tokens);
 	errs.printErrors();	
-    delete(scanner);
+
+	Parser::Parser parser(tokens);
+
+	Parser::Ast *ast = parser.parse();
+
+	ast->printTree();
+
+	delete(scanner);
     return EXIT_SUCCESS;
 }

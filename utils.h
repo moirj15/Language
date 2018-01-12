@@ -8,6 +8,7 @@
 #include <ctype.h>
 #include <string>
 #include <vector>
+#include <stack>
 
 #define local 	static
 
