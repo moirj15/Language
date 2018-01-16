@@ -150,6 +150,33 @@ ast.cpp.s:
 	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/ast.cpp.s
 .PHONY : ast.cpp.s
 
+converter.o: converter.cpp.o
+
+.PHONY : converter.o
+
+# target to build an object file
+converter.cpp.o:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/converter.cpp.o
+.PHONY : converter.cpp.o
+
+converter.i: converter.cpp.i
+
+.PHONY : converter.i
+
+# target to preprocess a source file
+converter.cpp.i:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/converter.cpp.i
+.PHONY : converter.cpp.i
+
+converter.s: converter.cpp.s
+
+.PHONY : converter.s
+
+# target to generate assembly for a file
+converter.cpp.s:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/converter.cpp.s
+.PHONY : converter.cpp.s
+
 errorLog.o: errorLog.cpp.o
 
 .PHONY : errorLog.o
@@ -285,6 +312,33 @@ utils.cpp.s:
 	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/utils.cpp.s
 .PHONY : utils.cpp.s
 
+vm.o: vm.cpp.o
+
+.PHONY : vm.o
+
+# target to build an object file
+vm.cpp.o:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/vm.cpp.o
+.PHONY : vm.cpp.o
+
+vm.i: vm.cpp.i
+
+.PHONY : vm.i
+
+# target to preprocess a source file
+vm.cpp.i:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/vm.cpp.i
+.PHONY : vm.cpp.i
+
+vm.s: vm.cpp.s
+
+.PHONY : vm.s
+
+# target to generate assembly for a file
+vm.cpp.s:
+	$(MAKE) -f CMakeFiles/Jay_lang.dir/build.make CMakeFiles/Jay_lang.dir/vm.cpp.s
+.PHONY : vm.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -297,6 +351,9 @@ help:
 	@echo "... ast.o"
 	@echo "... ast.i"
 	@echo "... ast.s"
+	@echo "... converter.o"
+	@echo "... converter.i"
+	@echo "... converter.s"
 	@echo "... errorLog.o"
 	@echo "... errorLog.i"
 	@echo "... errorLog.s"
@@ -312,6 +369,9 @@ help:
 	@echo "... utils.o"
 	@echo "... utils.i"
 	@echo "... utils.s"
+	@echo "... vm.o"
+	@echo "... vm.i"
+	@echo "... vm.s"
 .PHONY : help
 
 

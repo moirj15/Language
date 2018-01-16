@@ -1,7 +1,4 @@
 Lexer TODO:
-	+ Write atom identifiers
-    + Write Token creators
-    + test lexer
 
 Error Handler TODO:
 	+ Add data structures needed to hold necesary info
@@ -10,9 +7,12 @@ Error Handler TODO:
         - error
 
 Parser TODO:
-	+ write AST tree and sub-classes
-    + write the parser
-    + hook up LLVM
+
+VM TODO:
+	+ design bytecode
+	+ write an AST to bytecode converter
+	+ test vm and bytecode
+	+ test converter
 
 Library TODO:
 	+ replace c++ strings

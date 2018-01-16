@@ -31,7 +31,8 @@ void BinAddAst::deleteTree(ExpressionAst *tree) {
 }
 
 IntegerAst::IntegerAst(int32 d) : data(d) {
-
+	nodeType = INTEGER;
+	// TODO: replace data with token
 }
 
 IntegerAst::~IntegerAst(void) {
