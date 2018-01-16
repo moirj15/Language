@@ -1,27 +1,55 @@
 #include "ast.h"
 
-AST::~AST() {}
-void AST::print(void) {}
+namespace Parser {
 
-BinaryOpAst::BinaryOpAst(char o, AST *l, AST *r) : op(o), left(l), right(r) {
+BinAddAst::BinAddAst(ExpressionAst *l, ExpressionAst *r, Lex::Token t) 
+	: left(l), right(r) {
+	nodeType = BIN_ADD;
+	token = t;
+}
+
+
+BinAddAst::~BinAddAst(void) {
 
 }
 
-BinaryOpAst::~BinaryOpAst(void) {
-    delete(left);
-    delete(right);
+void BinAddAst::printTree(void) {
+	printf("+\n");
+	left->printTree();
+	right->printTree();
 }
 
-void BinaryOpAst::print(void) {
+void BinAddAst::deleteTree(ExpressionAst *tree) {
+	BinAddAst *del = (BinAddAst *) tree;
+	if (del->left) {
+		deleteTree(del->left);
+	}
+	if (del->right) {
+		deleteTree(del->right);
+	}
+	delete(tree);
+}
+
+IntegerAst::IntegerAst(int32 d) : data(d) {
 
 }
 
-IntegerAst::IntegerAst(uint32_t n) : value(n) {
+IntegerAst::~IntegerAst(void) {
 
 }
-
-IntegerAst::~IntegerAst(void) {}
-
-void IntegerAst::print(void) {
-    printf("%d", value);
+	
+void IntegerAst::printTree(void) {
+	printf("%d\n", data);
 }
+
+
+
+
+
+
+
+
+
+
+
+} // end namespace

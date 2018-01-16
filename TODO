@@ -1,0 +1,18 @@
+Lexer TODO:
+	+ Write atom identifiers
+    + Write Token creators
+    + test lexer
+
+Error Handler TODO:
+	+ Add data structures needed to hold necesary info
+    	- line number
+        - file name
+        - error
+
+Parser TODO:
+	+ write AST tree and sub-classes
+    + write the parser
+    + hook up LLVM
+
+Library TODO:
+	+ replace c++ strings

@@ -2,32 +2,26 @@
 #define PARSER_H
 
 #include "utils.h"
-#include "ast.h"
 #include "scanner.h"
+#include "ast.h"
+
+namespace Parser {
 
 class Parser {
-    vector<Token>   tokens;
-    uint32_t        pos;
+	std::vector<Lex::Token> 	tokens;
+	Ast							*AST;
+	Lex::Token					currTok;
 
-	
 public:
-    Parser(vector<Token> tok);
-    ~Parser(void);
-
-    AST *parse(void);
-
-private:
-    IntegerAst *parseInt(void);
+	Parser(std::vector<Lex::Token> toks);
+	~Parser(void);
 	
-	/**
-	 * Converts the arithmetic expression to postfix notation.
-	 *
-	 * @param end: The point where the arithmetic expression ends.
-	 * @return: List containing the postfix expression.
-	 */
-	vector<Token> *toPostFix(uint32_t end);
-	bool isEqualOrLess(uint32_t op, uint32_t type);
+	Ast *parse(void);
+private:
+	void parseExpression(void);
+	void nextToken(void);
 };
 
 
+}
 #endif

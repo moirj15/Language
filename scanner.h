@@ -1,138 +1,140 @@
-#ifndef LEXER_H
-#define LEXER_H
+#ifndef SCANNER_H
+#define SCANNER_H
 
+#include <vector>
+#include <string>
 #include "utils.h"
 #include "errorLog.h"
 
-/**
- * The token types that will be produced during lexical analysis
- */
+namespace Lex {
+ 
 
-enum TokenType {
-	COMMA,					// ,
-	ASSIGNMENT,				// =
-	SUM_ASSIGNMENT,			// +=
-	SUB_ASSIGNMENT,			// -=
-	MULT_ASSIGNMENT,		// *=
-	DIV_ASSIGNMENT,			// /=
-	REM_ASSIGNMENT,			// %=
-	SHIFT_LEFT_ASSIGNMENT,	// <<=
-	SHIFT_RIGHT_ASSIGNMENT,	// >>=
-	AND_ASSIGNMENT,			// &=
-	XOR_ASSIGNMENT,			// ^=
-	OR_ASSIGNMENT,			// |=
-	TERNARY_CONDITIONAL,	// ?=
-	LOG_OR,					// ||
-	LOG_AND,				// &&
-	BIT_OR,					// |
-	BIT_XOR,				// ^
-	BIT_AND,				// &
-	EQUAL_TO,				// ==
-	NOT_EQUAL_TO,			// !=
-	GREATER_THAN,			// >
-	GREATER_THAN_EQL,		// >=
-	LESS_THAN,				// <
-	LESS_THAN_EQL,			// <=
-	LEFT_SHIFT,				// <<
-	RIGHT_SHIFT,			// >>
-	ADDITION,				// +
-	SUBTRACTION,			// -
-	MULTIPLICATION,			// *
-	DIVISION,				// /
-	REMAINDER,				// %
-	SIZEOF,					// sizeof()
-	ADDRESS_OF,				// &var
-	DEREFERENCE,			// *var
-	TYPE_CAST,				// (type)
-	LOG_NOT,				// !
-	BIT_NOT,				// ~
-	PREFIX_INC,				// ++var
-	PREFIX_DEC,				// --var
-	MEMBER_ACCESS,			// struct.member
-	ARRAY_SUBSCRIPT,		// arr[]
-	FUNCTION_CALL,			// name()
-	METHOD_CALL,			// struct.name()
-	POSTFIX_INC,			// var++
-	POSTFIX_DEX,			// var--
-}
+enum TOKEN_IDENTIFER {
+	INTEGER_LITERAL,	// (1..9)(1..9)*
+    HEXADECIMAL_LITERAL,// 0x(0..9)*
+    OCTAL_LITERAL,		// 0(0..7)*
+    FLOAT_LITERAL,		// (0..9).(0..9)*		
+	SEMI_COLON,
+	IDENTIFIER,
+	ADD_OP,
 
-enum ReservedWord {
-	BOOL,
-	CHAR,
-	SHORT,
-	INT,
-	LONG,
-	LONG_LONG,
-	UNSIGNED,
-	VOID,
-	FOR,
-	WHILE,
-	STRUCT,
-	WITH,
-	METHOD,
-	INIT,
-	FUNC,
-	DO,
-	IF,
-	ELSE,
-	DELETE,
-	NEW,
 
-}
-
-/**
- * Container for the tokens.
- */
-struct Token {
-	uint32_t 	type;	// The type of token
-	string 		data;	// The data
-
-	Token(uint32_t t, string d);
-	~Token(void);
+    END_OF_FILE,
 };
 
-class Scanner {
-	FILE 			*m_sourceFile;	// The source file
-	ErrorLog 		*m_el;			// The ErrorLog that the scanner will report to
-	vector<Token> 	m_tokens;		// The list of tokens.
-	vector<char> 	m_source;
-	int				m_pos;
+/**
+ * Simple struct containing an identifier and data.
+ */
+struct Token {
+	std::string data;
+	uint32		identifier;
 
-public:
-	
+  	/**
+	 * Constructor.
+	 */
+	Token(void);
+
 	/**
 	 * Constructor.
 	 *
-	 * @param source: The source file that will be read from.
-	 * @param el: The reference to the ErrorLog that will be used for error
-	 * reporting.
+	 * @param d: The data that will be held by the token.
+	 * @param i: The token identifier.
 	 */
-	Scanner(FILE *sf, ErrorLog *el);
+	Token(std::string d, uint32 i);
+
+  	/**
+ 	 * Destructor.
+ 	 */
+	~Token(void);
 	
-	/**
-	 * Destructor
-	 */
-	~Scanner(void);
-
-	/**
-	 * Scans the source file and produces a list of tokens.
-	 */
-	vector<Token> scan(void);	
-private:
-	void createNum(void);
-	void createName(void);
-	void createReservedWord(string word);
-
-
+    /**
+     * Prints the Token to stdout. 
+     */
+	void printToken(void);
 };
 
+/**
+ * Class for scanning a file and producing tokens.
+ */
+class Scanner {
+	FILE 				*currFile;
+    std::vector<char> 	fileContent;
+    std::vector<Token> 	tokens;
+	uint64				pos;
+    ErrorLog			*errorLog;
+
+public:
+
+    /**
+     * Constructor.
+     */
+	Scanner(void);
+
+    /**
+     * Constructor.
+     */
+	Scanner(ErrorLog *errs);
+
+    /**
+     * Destructor.
+     */
+	~Scanner(void);
+
+    /**
+     * Load a new file for scanning.
+     *
+     * @param newFile: The file that will be loaded.
+     */
+    void changeFile(FILE *newFile);
+
+	/**
+     * Tokenize the contents of the currently loaded file.
+     */
+    void tokenize(void);
+
+    inline std::vector<Token> getTokens(void) {return tokens;}
+private:
+
+    /**
+     * Skips upto the first non-whitespace character. 
+     */
+    void skipWhiteSpace(void);
+
+    /**
+     * Skips to the next valid Token.
+     */
+	void skipToNextValidToken(void);
+
+    /**
+     * Scans for an identifier in the currently loaded file.
+     */
+	bool scanForIdentifier(void);
+
+    /**
+     * Scans for an integer literal in the currently loaded file.
+     */
+    bool scanForIntLit(void);
+
+	/**
+     * Scans for a hexadecimal literal in the currently loaded file.
+     */
+    bool scanForHexLit(void);
+
+    /**
+	 * Scans for an octal literal in the currently loaded file.
+	 */
+    bool scanForOctalLit(void);
+    
+    /**
+	 * Scans for a float literal in the currently loaded file.
+	 */
+    bool scanForFloatLit(void);
+
+    /**
+     * Scans for an add op.
+     */
+	void scanForAddOp(void);
+};
+
+}; // end namespace
 #endif
-
-
-
-
-
-
-
-
-

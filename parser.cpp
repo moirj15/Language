@@ -1,84 +1,52 @@
-#include <stack>
 #include "parser.h"
 
-Parser::Parser(vector<Token> tok) : tokens(tok) {
-    pos = 0;
+namespace Parser {
+
+Parser::Parser(std::vector<Lex::Token> toks) : tokens(toks) {
+	currTok = tokens[0];
 }
 
 Parser::~Parser(void) {
 
 }
 
-IntegerAst *Parser::parseInt(void) {
-	uint32_t end = pos;
-	while (tokens[end].type != SEMI_COLON) {
-		// TODO: add error checking. 
-		end++;
+Ast *Parser::parse(void) {
+	if (currTok.identifier == Lex::END_OF_FILE) {
+		return AST;
 	}
-	vector<Token> *postFix = toPostFix(end);
 
-
-	delete(postFix);
+	else if (currTok.identifier == Lex::INTEGER_LITERAL) {
+		parseExpression();
+	}
+	parse();
 }
 
-vector<Token> *Parser::toPostFix(uint32_t end) {
-	vector<Token> *result = new vector<Token>();
-	stack<Token> stk;
-	while (pos < end) {
-		Token op = tokens[pos];
-		if (op.type == NUMBER) {
-			result->push_back(tokens[pos]);
-		}
-		else if (op.type <= TILDA) {
-			while (stk.size() >= 0) {
-				if (stk.empty()) {
-					stk.push(tokens[pos]);
-					break;
-				}
-				Token popped = stk.top();
-				stk.pop();
-				if (op.type == LEFT_PAREN) {
-					stk.push(tokens[pos]);
-					break;
-				}
-				else if (isEqualOrLess(op.type, popped.type)) {
-					stk.push(popped);
-					stk.push(op);
-					break;
-				}
-				else {
-					result->push_back(popped);
-				}
-				pos++;
-			}
-		}
-		else if (op.type == LEFT_PAREN) {
-			stk.push(op);
-		}
-		else if (op.type == RIGHT_PAREN) {
-			while (!stk.empty()) {
-				Token popped = stk.top();
-				stk.pop();
-				if (popped.type == LEFT_PAREN) {
-					break;
-				}
-				result->push_back(popped);
-			}
-		}
-		pos++;
-	}
+void Parser::parseExpression() {
+	std::stack<Lex::Token> operands;
+	std::stack<Lex::Token> operators;
 
-	while (!stk.empty()) {
-		Token popped = stk.top();
-		stk.pop();
-		result->push_back(popped);
-	}
+	// TODO: add functionality to do multiple additions.
+	operands.push(currTok);
+	nextToken();
+	operators.push(currTok);
+	nextToken();
+	operands.push(currTok);
+	
+	IntegerAst *right = new IntegerAst(atoi(operands.top().data.c_str()));
+	operands.pop();
+	IntegerAst *left = new IntegerAst(atoi(operands.top().data.c_str()));
+	operands.pop();
+	AST = new BinAddAst(left, right, operators.top());
+	operators.pop();
 
-	return result;
+	nextToken();
+	nextToken();
 }
 
-bool Parser::isEqualOrLess(uint32_t op, uint32_t type) {
-
+void Parser::nextToken(void) {
+	static uint64 pos = 1;
+	currTok = tokens[pos];
+	pos++;
 }
 
 
@@ -88,4 +56,4 @@ bool Parser::isEqualOrLess(uint32_t op, uint32_t type) {
 
 
 
-
+} // end namespace

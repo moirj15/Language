@@ -1,0 +1,10 @@
+*.vs/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+x64/
+CMakeCache.txt
+*CMakeFiles/
+Jay_lang
+cmake_install.cmake

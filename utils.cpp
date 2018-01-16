@@ -20,10 +20,9 @@ void quit(const char *message) {
 FILE *openFile(const char *src, const char *perm) {
 	FILE *ret = NULL;
 	ret = fopen(src, perm);
-	if (!ret)
-		fprintf(stderr, "Failed to open file %s", src);
+	if (!ret) {
 		quit("Failed to open file");
-
+  }
 	return (ret);
 }
 
