@@ -17,6 +17,8 @@ add_executable(
 	converter.cpp
 	vm.h
 	vm.cpp
+	jString.h
+	jString.cpp
 )
 
 set(CMAKE_CXX+FLAGS "-std=c++14 -Wall -Wextra -pedantic")
