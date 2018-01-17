@@ -13,6 +13,10 @@ add_executable(
     ast.cpp
 	parser.h
 	parser.cpp
+	converter.h
+	converter.cpp
+	vm.h
+	vm.cpp
 )
 
-set(CMAKE_CXX+FLAGS "-std=c++11 -Wall -Wextra -pedantic")
+set(CMAKE_CXX+FLAGS "-std=c++14 -Wall -Wextra -pedantic")
