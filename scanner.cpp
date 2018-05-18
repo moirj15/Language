@@ -51,7 +51,7 @@ Token::Token(void) {
  * @param d: The data that will be held by the token.
  * @param i: The token identifier.
  */
-Token::Token(std::string d, uint32 i) : data(d), identifier(i) {
+Token::Token(std::string d, u32 i) : data(d), identifier(i) {
 
 }
 
@@ -205,7 +205,7 @@ void Scanner::skipToNextValidToken(void) {
  * Scans for an identifier in the currently loaded file.
  */
 bool Scanner::scanForIdentifier(void) {
-    uint64 tempPos = pos;
+    u64 tempPos = pos;
     std::string data;
 	while (isalnum(fileContent[tempPos]) || isUnderScore(fileContent[tempPos])) {
         data.push_back(fileContent[tempPos]);
@@ -225,7 +225,7 @@ bool Scanner::scanForIdentifier(void) {
  * Scans for an integer literal in the currently loaded file.
  */
 bool Scanner::scanForIntLit(void) {
-    uint64 tempPos = pos;
+    u64 tempPos = pos;
     std::string data;
 	if (fileContent[tempPos] == '0') {
         return false;
@@ -254,7 +254,7 @@ bool Scanner::scanForIntLit(void) {
  * Scans for a hexadecimal literal in the currently loaded file.
  */
 bool Scanner::scanForHexLit(void) {
-	uint64 tempPos = pos;
+	u64 tempPos = pos;
     std::string data;
     data.push_back(fileContent[tempPos]);
     tempPos++;
@@ -282,7 +282,7 @@ bool Scanner::scanForHexLit(void) {
  * Scans for an octal literal in the currently loaded file.
  */
 bool Scanner::scanForOctalLit(void) {
-    uint64 tempPos = pos;
+    u64 tempPos = pos;
     std::string data;
     char currChar = fileContent[tempPos];
 
@@ -310,7 +310,7 @@ bool Scanner::scanForOctalLit(void) {
  * Scans for a float literal in the currently loaded file.
  */
 bool Scanner::scanForFloatLit(void) {
-    uint64 tempPos = pos;
+    u64 tempPos = pos;
     std::string data;
    	while (isdigit(fileContent[tempPos])) {
         data.push_back(fileContent[tempPos]);

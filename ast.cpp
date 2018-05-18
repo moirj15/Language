@@ -1,35 +1,37 @@
 #include "ast.h"
 
 
-BinExpAst::BinExpAst(ExpressionAst *l, ExpressionAst *r, char op) 
-		: left(l), right(r), operation(op) {
+BinAddAst::BinAddAst(ExpressionAst *l, ExpressionAst *r, Lex::Token t) 
+	: left(l), right(r) {
+	nodeType = BIN_ADD;
+	token = t;
+}
+
+
+BinAddAst::~BinAddAst(void) {
 
 }
 
-BinExpAst::~BinExpAst(void) {
-
+void BinAddAst::printTree(void) {
+	printf("+\n");
+	left->printTree();
+	right->printTree();
 }
 
-void BinExpAst::deleteTree(ExpressionAst *tree) {
-	auto *del = dynamic_cast<BinExpAst *>(tree); 
-	if (left) {
-		deleteTree((ExpressionAst *)del->left);
+void BinAddAst::deleteTree(ExpressionAst *tree) {
+	BinAddAst *del = (BinAddAst *) tree;
+	if (del->left) {
+		deleteTree(del->left);
 	}
-	if (right) {
-		deleteTree((ExpressionAst *)del->right);
+	if (del->right) {
+		deleteTree(del->right);
 	}
 	delete(tree);
 }
 
-void BinExpAst::printTree(void) {
-	printf("%c\n", operation);
-	left->printTree();
-	right->printTree();
-}
-	
-
-IntegerAst::IntegerAst(int32 d) : data(d) {
-
+IntegerAst::IntegerAst(s32 d) : data(d) {
+	nodeType = INTEGER;
+	// TODO: replace data with token
 }
 
 IntegerAst::~IntegerAst(void) {
@@ -37,9 +39,12 @@ IntegerAst::~IntegerAst(void) {
 }
 	
 void IntegerAst::printTree(void) {
-	printf("%d", data);
+	printf("%d\n", data);
 }
 
+void IntegerAst::deleteTree(ExpressionAst *tree) {
+    (void)tree;
+}
 
 
 

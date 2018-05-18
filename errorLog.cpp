@@ -29,7 +29,7 @@ void ErrorLog::reportError(const char *err) {
  * Print the errors to stdout.
  */
 void ErrorLog::printErrors(void) {
-    for (uint32 i = 0; i < errors.size(); i++) {
+    for (u32 i = 0; i < errors.size(); i++) {
         printf("%s\n", errors[i].c_str());
     }
 }

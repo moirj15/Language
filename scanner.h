@@ -9,7 +9,7 @@
 namespace Lex {
  
 
-enum TOKEN_IDENTIFER : uint64 {
+enum TOKEN_IDENTIFER {
 	INTEGER_LITERAL,	// (1..9)(1..9)*
     HEXADECIMAL_LITERAL,// 0x(0..9)*
     OCTAL_LITERAL,		// 0(0..7)*
@@ -27,7 +27,7 @@ enum TOKEN_IDENTIFER : uint64 {
  */
 struct Token {
 	std::string data;
-	uint32		identifier;
+	u32			identifier;
 
   	/**
 	 * Constructor.
@@ -40,7 +40,7 @@ struct Token {
 	 * @param d: The data that will be held by the token.
 	 * @param i: The token identifier.
 	 */
-	Token(std::string d, uint32 i);
+	Token(std::string d, u32 i);
 
   	/**
  	 * Destructor.
@@ -60,7 +60,7 @@ class Scanner {
 	FILE 				*currFile;
     std::vector<char> 	fileContent;
     std::vector<Token> 	tokens;
-	uint64				pos;
+	u64					pos;
     ErrorLog			*errorLog;
 
 public:
@@ -93,6 +93,7 @@ public:
     void tokenize(void);
 
     inline std::vector<Token> getTokens(void) {return tokens;}
+
 private:
 
     /**

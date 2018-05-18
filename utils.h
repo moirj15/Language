@@ -8,18 +8,22 @@
 #include <ctype.h>
 #include <string>
 #include <vector>
+#include <stack>
 
 #define local 	static
 
-typedef char  	int8;
-typedef short 	int16;
-typedef int     int32;
-typedef long		int64;
+typedef int8_t  s8;
+typedef int16_t s16;
+typedef int32_t s32;
+typedef int64_t s64;
 
-typedef unsigned char		uint8;
-typedef unsigned short 	uint16;
-typedef unsigned int 		uint32;
-typedef unsigned long 	uint64;
+typedef uint8_t  u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+
+typedef float	 f32;
+typedef double	 f64;
 
 #define db()	printf("hit\n");
 

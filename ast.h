@@ -4,7 +4,15 @@
 #include "utils.h"
 #include "scanner.h"
 
+
+enum NODE_TYPE {
+	BIN_ADD,
+	INTEGER,
+};
+
 struct Ast {
+	u32 		nodeType;
+	Lex::Token 	token;
 	virtual ~Ast(void) {}
 
 	virtual void printTree(void) {}
@@ -13,41 +21,31 @@ struct Ast {
 struct ExpressionAst : public Ast {
 	virtual ~ExpressionAst(void) {}
 
-	virtual void printTree(void) {}
+	virtual void printTree(void) = 0; 
+	virtual void deleteTree(ExpressionAst *tree) = 0; 
 };
 
-struct BinExpAst : public ExpressionAst {
-	ExpressionAst 	*left;
-	ExpressionAst	*right;
-	char		operation;
+struct BinAddAst : public ExpressionAst {
+	ExpressionAst *left;
+	ExpressionAst *right;
 
-	BinExpAst(ExpressionAst *l, ExpressionAst *r, char op);
-	~BinExpAst(void);
-
-	void deleteTree(ExpressionAst *tree); 
+	BinAddAst(ExpressionAst *l, ExpressionAst *r, Lex::Token t);
+	~BinAddAst(void);
+	
 	void printTree(void);
+	void deleteTree(ExpressionAst *tree);
 };
 
 struct IntegerAst : public ExpressionAst {
-	int32 data;
-	IntegerAst(int32 d);
+	s32 data;
+	
+	IntegerAst(s32 d);
 	~IntegerAst(void);
+
 	void printTree(void);
+	void deleteTree(ExpressionAst *tree); 
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 #endif

@@ -13,6 +13,12 @@ add_executable(
     ast.cpp
 	parser.h
 	parser.cpp
+	converter.h
+	converter.cpp
+	vm.h
+	vm.cpp
+	jString.h
+	jString.cpp
 )
 
-set(CMAKE_CXX+FLAGS "-std=c++17 -Wall -Wextra -pedantic")
+set(CMAKE_CXX+FLAGS "-std=c++14 -Wall -Wextra -pedantic")
