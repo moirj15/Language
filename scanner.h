@@ -6,10 +6,12 @@
 #include "utils.h"
 #include "errorLog.h"
 
-namespace Lex {
+namespace Lex
+{
  
 
-enum TOKEN_IDENTIFER {
+enum TOKEN_IDENTIFER
+{
 	INTEGER_LITERAL,	// (1..9)(1..9)*
     HEXADECIMAL_LITERAL,// 0x(0..9)*
     OCTAL_LITERAL,		// 0(0..7)*
@@ -25,7 +27,8 @@ enum TOKEN_IDENTIFER {
 /**
  * Simple struct containing an identifier and data.
  */
-struct Token {
+struct Token
+{
 	std::string data;
 	u32			identifier;
 
@@ -56,7 +59,8 @@ struct Token {
 /**
  * Class for scanning a file and producing tokens.
  */
-class Scanner {
+class Scanner
+{
 	FILE 				*currFile;
     std::vector<char> 	fileContent;
     std::vector<Token> 	tokens;

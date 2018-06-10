@@ -41,7 +41,8 @@ namespace Lex {
 /**
  * Constructor.
  */
-Token::Token(void) {
+Token::Token(void)
+{
 
 }
 
@@ -51,21 +52,24 @@ Token::Token(void) {
  * @param d: The data that will be held by the token.
  * @param i: The token identifier.
  */
-Token::Token(std::string d, u32 i) : data(d), identifier(i) {
+Token::Token(std::string d, u32 i) : data(d), identifier(i)
+{
 
 }
 
 /**
  * Destructor.
  */
-Token::~Token(void) {
+Token::~Token(void)
+{
 
 }
 
 /**
  * Prints the Token to stdout. 
  */
-void Token::printToken(void) {
+void Token::printToken(void)
+{
     printf("data: %s identifier: ", data.c_str());
     switch (identifier) {
         case INTEGER_LITERAL:
@@ -106,18 +110,21 @@ void Token::printToken(void) {
 // Scanner related code
 ////////////////////////////////////////////////////////////////////////////////
 
-Scanner::Scanner(void) {
-    currFile = NULL;
+Scanner::Scanner(void) : currFile(NULL)
+{
+
 }
 
 /**
  * Constructor.
  */
-Scanner::Scanner(ErrorLog *errs) : errorLog(errs) {
+Scanner::Scanner(ErrorLog *errs) : pos(0), errorLog(errs)
+{
     
 }
 
-Scanner::~Scanner(void) {
+Scanner::~Scanner(void)
+{
     closeFile(currFile);	// close file handle
 }
 
@@ -126,7 +133,8 @@ Scanner::~Scanner(void) {
  *
  * @param newFile: The file that will be loaded.
  */
-void Scanner::changeFile(FILE *newFile) {
+void Scanner::changeFile(FILE *newFile)
+{
     currFile = newFile;
     if (!fileContent.empty()) {
         fileContent.clear();
@@ -141,7 +149,8 @@ void Scanner::changeFile(FILE *newFile) {
 /**
  * Tokenize the contents of the currently loaded file.
  */
-void Scanner::tokenize(void) {
+void Scanner::tokenize(void)
+{
 	if (!currFile) {	// make sure the current file isn't null
         quit("CurrFile is NULL");
     }
@@ -186,7 +195,8 @@ void Scanner::tokenize(void) {
 /**
  * Skips upto the first non-whitespace character. 
  */
-void Scanner::skipWhiteSpace(void) {
+void Scanner::skipWhiteSpace(void)
+{
     while (isspace(fileContent[pos]) && (fileContent[pos] != EOF)) {
         pos++;
     }
@@ -195,7 +205,8 @@ void Scanner::skipWhiteSpace(void) {
 /**
  * Skips to the next line of code in an attempt to move to the next safe Token.
  */
-void Scanner::skipToNextValidToken(void) {
+void Scanner::skipToNextValidToken(void)
+{
     while (!isSemiColon(fileContent[pos])) {
         pos++;
     }
@@ -204,7 +215,8 @@ void Scanner::skipToNextValidToken(void) {
 /**
  * Scans for an identifier in the currently loaded file.
  */
-bool Scanner::scanForIdentifier(void) {
+bool Scanner::scanForIdentifier(void)
+{
     u64 tempPos = pos;
     std::string data;
 	while (isalnum(fileContent[tempPos]) || isUnderScore(fileContent[tempPos])) {
@@ -224,7 +236,8 @@ bool Scanner::scanForIdentifier(void) {
 /**
  * Scans for an integer literal in the currently loaded file.
  */
-bool Scanner::scanForIntLit(void) {
+bool Scanner::scanForIntLit(void)
+{
     u64 tempPos = pos;
     std::string data;
 	if (fileContent[tempPos] == '0') {
@@ -253,7 +266,8 @@ bool Scanner::scanForIntLit(void) {
 /**
  * Scans for a hexadecimal literal in the currently loaded file.
  */
-bool Scanner::scanForHexLit(void) {
+bool Scanner::scanForHexLit(void)
+{
 	u64 tempPos = pos;
     std::string data;
     data.push_back(fileContent[tempPos]);
@@ -281,7 +295,8 @@ bool Scanner::scanForHexLit(void) {
 /**
  * Scans for an octal literal in the currently loaded file.
  */
-bool Scanner::scanForOctalLit(void) {
+bool Scanner::scanForOctalLit(void)
+{
     u64 tempPos = pos;
     std::string data;
     char currChar = fileContent[tempPos];
@@ -309,7 +324,8 @@ bool Scanner::scanForOctalLit(void) {
 /**
  * Scans for a float literal in the currently loaded file.
  */
-bool Scanner::scanForFloatLit(void) {
+bool Scanner::scanForFloatLit(void)
+{
     u64 tempPos = pos;
     std::string data;
    	while (isdigit(fileContent[tempPos])) {
@@ -343,7 +359,8 @@ bool Scanner::scanForFloatLit(void) {
 /**
  * Scans for an add op.
  */
-void Scanner::scanForAddOp(void) {
+void Scanner::scanForAddOp(void)
+{
     tokens.push_back(Token(std::string("+"), ADD_OP));
     pos++;
 }

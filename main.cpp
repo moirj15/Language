@@ -6,6 +6,9 @@
 #include "converter.h"
 #include "vm.h"
 
+/**
+ *
+ */
 void printTokens(std::vector<Lex::Token> toks) {
     for (u64 i = 0; i < toks.size(); i++) {
         toks[i].printToken();
