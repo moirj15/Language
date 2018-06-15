@@ -19,6 +19,9 @@ enum TOKEN_IDENTIFER
 	SEMI_COLON,
 	IDENTIFIER,
 	ADD_OP,
+	SUB_OP,
+	DIV_OP,
+	MULT_OP,
 
 
     END_OF_FILE,
@@ -35,7 +38,7 @@ struct Token
   	/**
 	 * Constructor.
 	 */
-	Token(void);
+	Token(void) {}
 
 	/**
 	 * Constructor.
@@ -43,12 +46,12 @@ struct Token
 	 * @param d: The data that will be held by the token.
 	 * @param i: The token identifier.
 	 */
-	Token(std::string d, u32 i);
+	Token(std::string d, u32 i) : data(d), identifier(i) {}
 
   	/**
  	 * Destructor.
  	 */
-	~Token(void);
+	~Token(void) {}
 	
     /**
      * Prints the Token to stdout. 
@@ -72,17 +75,17 @@ public:
     /**
      * Constructor.
      */
-	Scanner(void);
+	Scanner(void) : currFile(NULL) {}
 
     /**
      * Constructor.
      */
-	Scanner(ErrorLog *errs);
+	Scanner(ErrorLog *errs) : pos(0), errorLog(errs) {}
 
     /**
      * Destructor.
      */
-	~Scanner(void);
+	~Scanner(void) { closeFile(currFile); }
 
     /**
      * Load a new file for scanning.
@@ -96,7 +99,7 @@ public:
      */
     void tokenize(void);
 
-    inline std::vector<Token> getTokens(void) {return tokens;}
+    inline const std::vector<Token> getTokens(void) {return tokens;}
 
 private:
 

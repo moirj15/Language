@@ -9,20 +9,23 @@
 /**
  *
  */
-void printTokens(std::vector<Lex::Token> toks) {
+void printTokens(std::vector<Lex::Token> toks)
+{
     for (u64 i = 0; i < toks.size(); i++) {
         toks[i].printToken();
     }
 }
 
-void printByteCode(std::vector<u64> code) {
+void printByteCode(std::vector<u64> code)
+{
 	printf("size %ld\n", code.size());
     for (u64 i = 0; i < code.size(); i++) {
     	printf("code %ld\n", code[i]);
 	}
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     if (argc < 2) {
         quit("No source file");
     }

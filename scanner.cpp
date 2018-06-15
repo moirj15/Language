@@ -38,32 +38,6 @@ namespace Lex {
 ////////////////////////////////////////////////////////////////////////////////
 // Token related code
 ////////////////////////////////////////////////////////////////////////////////
-/**
- * Constructor.
- */
-Token::Token(void)
-{
-
-}
-
-/**
- * Constructor.
- *
- * @param d: The data that will be held by the token.
- * @param i: The token identifier.
- */
-Token::Token(std::string d, u32 i) : data(d), identifier(i)
-{
-
-}
-
-/**
- * Destructor.
- */
-Token::~Token(void)
-{
-
-}
 
 /**
  * Prints the Token to stdout. 
@@ -110,23 +84,6 @@ void Token::printToken(void)
 // Scanner related code
 ////////////////////////////////////////////////////////////////////////////////
 
-Scanner::Scanner(void) : currFile(NULL)
-{
-
-}
-
-/**
- * Constructor.
- */
-Scanner::Scanner(ErrorLog *errs) : pos(0), errorLog(errs)
-{
-    
-}
-
-Scanner::~Scanner(void)
-{
-    closeFile(currFile);	// close file handle
-}
 
 /**
  * Load a new file for scanning.
@@ -141,7 +98,10 @@ void Scanner::changeFile(FILE *newFile)
 		tokens.clear();
     }
 	while (!feof(currFile)) {
-        fileContent.push_back(fgetc(currFile));
+		char c = fgetc(currFile);
+		if ((c != '\r') || (c != '\n')) {
+        	fileContent.push_back(c);
+		}
     }
     fileContent.push_back(EOF);
 }
@@ -154,20 +114,21 @@ void Scanner::tokenize(void)
 	if (!currFile) {	// make sure the current file isn't null
         quit("CurrFile is NULL");
     }
-    //TODO: consider putting current char in it's on var
-    while (fileContent[pos] != EOF) { 
+	// TODO: consider making this into a switch statement
+	char c = fileContent[pos];
+    while (c != EOF) { 
 		bool found = false;
 		if (errorLog->errorFound) {
             skipToNextValidToken();
             errorLog->errorFound = false;
         }	
-        if (isspace(fileContent[pos])) {
+        if (isspace(c)) {
             skipWhiteSpace();
         }
-        if (isalpha(fileContent[pos])) {
+        if (isalpha(c)) {
 			scanForIdentifier();
         }
-        if (isdigit(fileContent[pos])) {
+        if (isdigit(c)) {
 			found = scanForIntLit();
             //TODO: Consider adding some sort of short circuit
             // ex: if a '.' is found in an intLiteral then jump to scanForFloat
@@ -181,13 +142,26 @@ void Scanner::tokenize(void)
                 found = scanForFloatLit();
             }
         }
-        if (isSemiColon(fileContent[pos])) {
+        if (isSemiColon(c)) {
             tokens.push_back(Token(std::string(";"), SEMI_COLON));
             pos++;
         }
-		if (isPlus(fileContent[pos])) {
+		else if (isPlus(c)) {
             scanForAddOp();
         }
+		else if (isDash(c)) {
+			tokens.push_back(Token(std::string("-"), SUB_OP));
+			pos++;
+		}
+		else if (isForwardSlash(c)) {
+			tokens.push_back(Token(std::string("/"), DIV_OP));
+			pos++;
+		}
+		else if (isStar(c)) {
+			tokens.push_back(Token(std::string("*"), MULT_OP));
+			pos++;
+		}
+		c = fileContent[pos];
     }
     tokens.push_back(Token(std::string(""), END_OF_FILE));
 }
