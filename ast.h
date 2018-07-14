@@ -6,7 +6,12 @@
 
 
 enum NODE_TYPE {
-	BIN_ADD,
+    ADD_EXP,
+    SUB_EXP,
+    MULT_EXP,
+    DIV_EXP,
+    NEGATE_EXP,
+    UNARY_EXP,
 	INTEGER,
 };
 
@@ -25,15 +30,26 @@ struct ExpressionAst : public Ast {
 	virtual void deleteTree(ExpressionAst *tree) = 0; 
 };
 
-struct BinAddAst : public ExpressionAst {
-	ExpressionAst *left;
-	ExpressionAst *right;
+struct BinExpression : public ExpressionAst {
+    ExpressionAst *left;
+    ExpressionAst *right;
 
-	BinAddAst(ExpressionAst *l, ExpressionAst *r, Lex::Token t);
-	~BinAddAst(void);
-	
-	void printTree(void);
-	void deleteTree(ExpressionAst *tree);
+    BinExpression();
+    virtual ~BinExpression();
+
+    virtual void printTree(void);
+    virtual void deleteTree(ExpressionAst *tree);
+};
+
+
+struct UnaryExpression : public ExpressionAst {
+    ExpressionAst *child;
+    
+    UnaryExpression(void);
+    virtual ~UnaryExpression(void);
+
+    virtual void printTree();
+    virtual void deleteTree(ExpressionAst *tree);
 };
 
 struct IntegerAst : public ExpressionAst {
@@ -44,7 +60,6 @@ struct IntegerAst : public ExpressionAst {
 
 	void printTree(void);
 	void deleteTree(ExpressionAst *tree); 
-
 };
 
 

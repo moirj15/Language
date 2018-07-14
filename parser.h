@@ -5,21 +5,15 @@
 #include "scanner.h"
 #include "ast.h"
 
+#include <map>
+namespace Parser 
+{
 
-class Parser {
-	std::vector<Lex::Token> 	tokens;
-	Ast							*AST;
-	Lex::Token					currTok;
+    void initParser(std::vector<Lex::Token> &t);    
 
-public:
-	Parser(std::vector<Lex::Token> toks);
-	~Parser(void);
-	
-	Ast *parse(void);
-private:
-	void parseExpression(void);
-	void nextToken(void);
-};
+    Ast *parse(void);
+}
+
 
 
 #endif

@@ -42,9 +42,9 @@ int main(int argc, char **argv)
     printTokens(tokens);
 	errs.printErrors();	
 
-	Parser parser(tokens);
+    Parser::initParser(tokens);
 
-	Ast *ast = parser.parse();
+	Ast *ast = Parser::parse();
 
 	ast->printTree();
 
